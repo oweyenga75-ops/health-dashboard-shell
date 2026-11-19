@@ -682,19 +682,23 @@ with st.expander("📩 Interested in a Custom Deployment or Live Walkthrough? Co
                 else:
                     try:
                         import requests as _req
+                        w3_key = str(st.secrets.get("WEB3FORMS_KEY", "")).strip()
+                        if not w3_key:
+                            raise ValueError("Missing WEB3FORMS_KEY")
                         resp = _req.post(
-                            "https://formsubmit.co/ajax/oweyenga75@gmail.com",
+                            "https://api.web3forms.com/submit",
                             json={
-                                "_subject": f"MedPulse Demo Inquiry from {client_name.strip()}",
+                                "access_key": w3_key,
+                                "subject": f"MedPulse Demo Inquiry from {client_name.strip()}",
+                                "from_name": "MedPulse Health Analytics Demo",
                                 "name": client_name.strip(),
                                 "email": client_email.strip(),
                                 "message": client_msg.strip(),
                             },
-                            headers={"Accept": "application/json"},
                             timeout=10,
                         )
-                        if resp.status_code == 200:
-                            st.success("✅ Inquiry sent! We will respond to your email shortly.")
+                        if resp.status_code == 200 and resp.json().get("success"):
+                            st.success("✅ Inquiry delivered! We will respond to your email shortly.")
                         else:
                             st.info("Please click the Direct Email button on the left to reach oweyenga75@gmail.com.")
                     except Exception:
