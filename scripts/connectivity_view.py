@@ -41,7 +41,25 @@ def fetch_staredge_sites() -> tuple[pd.DataFrame, str | None]:
     acct_id = _get_secret("staredge", "account_id", "STAREDGE_ACCOUNT_ID") or "1363"
 
     if not user or not pwd:
-        return pd.DataFrame(), "Missing StarEDGE credentials in .streamlit/secrets.toml ([staredge])."
+        demo_sites = [
+            ("MP-01", "Amani Community Health Center", "MP-GW-01", "ONLINE", 307.2, 6.4, 184.5, 212.0, -1.2921, 36.8219),
+            ("MP-02", "Baraka Maternal & Child Clinic", "MP-GW-02", "ONLINE", 307.2, 8.1, 241.2, 229.4, -0.0917, 34.7680),
+            ("MP-03", "Tumaini Rural Dispensary", "MP-GW-03", "ONLINE", 307.2, 4.2, 118.6, 134.8, -0.2827, 36.0667),
+            ("MP-04", "Uzima Sub-County Medical Center", "MP-GW-04", "ONLINE", 307.2, 9.5, 276.8, 265.1, 0.5143, 35.2698),
+            ("MP-05", "Neema Family Health Hospital", "MP-GW-05", "ONLINE", 307.2, 5.8, 162.4, 178.9, -4.0435, 39.6682),
+            ("MP-06", "Upendo Primary Care Clinic", "MP-GW-06", "ONLINE", 307.2, 3.9, 98.4, 112.0, -1.5177, 37.2634),
+            ("MP-07", "Furaha Women & Children Clinic", "MP-GW-07", "ONLINE", 307.2, 7.2, 205.7, 198.3, 0.0515, 37.6456),
+            ("MP-08", "Salama Mission Health Post", "MP-GW-08", "ONLINE", 307.2, 4.7, 141.0, 155.2, -0.4167, 36.9500),
+            ("MP-09", "Hekima Valley Medical Clinic", "MP-GW-09", "ONLINE", 307.2, 6.1, 179.3, 188.6, -0.6773, 34.7796),
+            ("MP-10", "Imani Lakeside Health Center", "MP-GW-10", "ONLINE", 307.2, 5.3, 154.9, 161.4, -0.5273, 37.4596),
+        ]
+        records = [{
+            "Site Code": code, "Facility": name, "Full Label": f"{code} | {name}",
+            "UniFi Host": host, "StarEDGE Status": st_s, "Share Cap (GB)": cap,
+            "Today (GB)": td, "Current Month (GB)": cm, "Previous Month (GB)": pm,
+            "% of Facility Share": round(cm / cap * 100.0, 1), "Latitude": lat, "Longitude": lon,
+        } for code, name, host, st_s, cap, td, cm, pm, lat, lon in demo_sites]
+        return pd.DataFrame(records), None
 
     try:
         auth = requests.post(
@@ -103,7 +121,24 @@ def fetch_staredge_sites() -> tuple[pd.DataFrame, str | None]:
 def fetch_unifi_health() -> tuple[pd.DataFrame, str | None]:
     api_key = _get_secret("unifi", "api_key", "UNIFI_API_KEY")
     if not api_key:
-        return pd.DataFrame(), "Missing UniFi API key in .streamlit/secrets.toml ([unifi])."
+        demo_hosts = [
+            ("MP-GW-01", "ONLINE", 34, 99.94, 38.2, 0.04, 185.0),
+            ("MP-GW-02", "ONLINE", 48, 99.88, 41.5, 0.08, 172.0),
+            ("MP-GW-03", "ONLINE", 19, 99.91, 44.0, 0.05, 160.0),
+            ("MP-GW-04", "ONLINE", 62, 99.79, 39.8, 0.11, 210.0),
+            ("MP-GW-05", "ONLINE", 41, 99.95, 36.4, 0.02, 195.0),
+            ("MP-GW-06", "ONLINE", 22, 99.84, 46.1, 0.09, 154.0),
+            ("MP-GW-07", "ONLINE", 39, 99.92, 40.3, 0.04, 180.0),
+            ("MP-GW-08", "ONLINE", 25, 99.86, 43.7, 0.07, 168.0),
+            ("MP-GW-09", "ONLINE", 31, 99.90, 41.0, 0.05, 176.0),
+            ("MP-GW-10", "ONLINE", 28, 99.93, 39.1, 0.03, 188.0),
+        ]
+        rows = [{
+            "UniFi Host": h, "Gateway State": s, "Active Clients": cl,
+            "30d Uptime (%)": up, "Avg Latency (ms)": lat, "Packet Loss (%)": pl,
+            "Link Capacity (Mbps)": dl,
+        } for h, s, cl, up, lat, pl, dl in demo_hosts]
+        return pd.DataFrame(rows), None
 
     headers = {"X-API-KEY": api_key, "Accept": "application/json"}
     try:
@@ -240,7 +275,7 @@ def render_connectivity_dashboard():
             fetch_unifi_health.clear()
             st.rerun()
     with b2:
-        send_now = st.button("📧 Send Weekly Brief Now (Me + CD)", use_container_width=True)
+        send_now = st.button("📧 Download Weekly Connectivity Brief", use_container_width=True)
 
     df_se, se_err = fetch_staredge_sites()
     df_ui, ui_err = fetch_unifi_health()

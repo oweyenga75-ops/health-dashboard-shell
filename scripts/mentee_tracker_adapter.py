@@ -1,6 +1,27 @@
 import os
 import pandas as pd
 
+MENTOR_REGISTRY = {
+    "amara.okafor": {"name": "Dr. Amara Okafor", "track": "Medical", "cohort": "Cohort 1"},
+    "david.mensah": {"name": "David Mensah", "track": "Management", "cohort": "Cohort 1"},
+    "grace.kamau": {"name": "Grace Kamau", "track": "Medical", "cohort": "Cohort 2"},
+    "samuel.otieno": {"name": "Samuel Otieno", "track": "Management", "cohort": "Cohort 2"},
+    "fatima.hassan": {"name": "Dr. Fatima Hassan", "track": "Medical", "cohort": "Cohort 3"},
+    "brian.mwangi": {"name": "Brian Mwangi", "track": "Management", "cohort": "Cohort 3"},
+}
+
+MODULE_LABELS = {
+    "med-m1": "M1: Back to Basics & Triage",
+    "med-m2": "M2: Safe Baby (Neonatal Care)",
+    "med-m3": "M3: Safe Mother (Maternal Care)",
+    "med-m4": "M4: Healthy Children (IMCI)",
+    "med-m5": "M5: Top Clinical Burdens",
+    "mgt-m1": "M1: Financial Governance",
+    "mgt-m2": "M2: Supply Chain & Inventory",
+    "mgt-m3": "M3: Human Resource & Workflow",
+    "mgt-m4": "M4: Patient Experience & Growth",
+}
+
 def _norm_fac_key(name: str) -> str:
     return str(name).strip().lower()
 

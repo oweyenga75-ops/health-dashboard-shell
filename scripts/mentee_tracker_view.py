@@ -721,8 +721,8 @@ def render_mentee_tracker_view():
 
         top_mentor = df_mentors.sort_values("Unique Mentees", ascending=False).iloc[0]
         _explain_box(
-            f"<b>Cohort 1 &amp; 2</b> mentors (Joseph Kirori and Lewis Muriuki) carry higher cumulative unique headcounts due to longer tenure, "
-            f"led by <b>{top_mentor['Mentor']}</b> ({top_mentor['Unique Mentees']} unique mentees across {top_mentor['Coaching Sessions']} sessions), while <b>Cohort 3</b> mentors (Newton, Whyttney, Adrian, Mary) are actively scaling new facilities."
+            f"<b>Cohort 1 &amp; 2</b> mentors carry higher cumulative unique headcounts due to longer tenure, "
+            f"led by <b>{top_mentor['Mentor']}</b> ({top_mentor['Unique Mentees']} unique mentees across {top_mentor['Coaching Sessions']} sessions), while <b>Cohort 3</b> mentors are actively scaling newly onboarded facilities."
         )
 
     with m_col3:
