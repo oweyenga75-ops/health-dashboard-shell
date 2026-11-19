@@ -619,6 +619,42 @@ if not st.session_state["authenticated"]:
 
     st.stop()
 
+st.markdown("""
+<style>
+div[data-testid="stExpander"] details summary {
+    background-color: #F1F5F9 !important;
+    color: #0F2C59 !important;
+    border: 1px solid #CBD5E1 !important;
+    border-radius: 8px !important;
+    font-weight: 700 !important;
+}
+div[data-testid="stExpander"] details summary p {
+    color: #0F2C59 !important;
+}
+div[data-testid="stExpander"] label p {
+    color: #0F172A !important;
+    font-weight: 600 !important;
+}
+div[data-testid="stExpander"] input,
+div[data-testid="stExpander"] textarea {
+    background-color: #FFFFFF !important;
+    color: #0F172A !important;
+    border: 1px solid #CBD5E1 !important;
+}
+div[data-testid="stExpander"] button[kind="secondaryFormSubmit"],
+div[data-testid="stExpander"] button[type="submit"] {
+    background-color: #0F2C59 !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    font-weight: 700 !important;
+}
+div[data-testid="stExpander"] button[kind="secondaryFormSubmit"] p,
+div[data-testid="stExpander"] button[type="submit"] p {
+    color: #FFFFFF !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
 with st.expander("📩 Interested in a Custom Deployment or Live Walkthrough? Contact MedPulse Health Analytics", expanded=False):
     c_info, c_form = st.columns([1.1, 1.4])
     with c_info:
