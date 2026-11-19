@@ -695,14 +695,20 @@ with st.expander("📩 Interested in a Custom Deployment or Live Walkthrough? Co
                                 "email": client_email.strip(),
                                 "message": client_msg.strip(),
                             },
+                            headers={
+                                "Accept": "application/json",
+                                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
+                            },
                             timeout=10,
                         )
-                        if resp.status_code == 200 and resp.json().get("success"):
+                        data = resp.json() if resp.headers.get("content-type", "").startswith("application/json") else {}
+                        if resp.status_code == 200 and data.get("success"):
                             st.success("✅ Inquiry delivered! We will respond to your email shortly.")
                         else:
-                            st.info("Please click the Direct Email button on the left to reach oweyenga75@gmail.com.")
-                    except Exception:
-                        st.info("Please click the Direct Email button on the left to reach oweyenga75@gmail.com.")
+                            err_msg = data.get("message", f"HTTP {resp.status_code}")
+                            st.warning(f"Form relay notice ({err_msg}) — please use Direct Email: oweyenga75@gmail.com on the left.")
+                    except Exception as exc:
+                        st.warning(f"Form relay notice ({exc}) — please use Direct Email: oweyenga75@gmail.com on the left.")
 st.set_page_config(
     page_title="MedPulse Executive Clinical & Volume Analytics",
     page_icon="🏥",
