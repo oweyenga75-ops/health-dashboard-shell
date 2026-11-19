@@ -546,14 +546,19 @@ if not st.session_state["authenticated"]:
             passkey = st.text_input("Authorization Key", type="password", placeholder="Enter executive authorization key...", label_visibility="collapsed", key="exec_passkey")
             st.markdown("<div style='height:12px;'></div>", unsafe_allow_html=True)
             if st.form_submit_button("UNLOCK PORTAL  →", use_container_width=True):
-                if passkey == "Demo2026!":
+                expected_key = ""
+                try:
+                    expected_key = str(st.secrets.get("DEMO_PASSKEY", "")).strip()
+                except Exception:
+                    expected_key = ""
+                if expected_key and passkey == expected_key:
                     st.session_state["authenticated"] = True
                     st.rerun()
                 else:
                     st.error("❌ Authorization Failed: Invalid Executive Key")
             st.markdown("""
                 <div style="margin-top:26px;padding-top:16px;border-top:1px solid #E2E8F0;display:flex;justify-content:space-between;align-items:center;color:#64748B;font-size:12px;">
-                    <span>🛡️ End-to-End Encrypted Session</span>
+                    <span>🛡️ Demo Environment &bull; <a href="mailto:oweyenga75@gmail.com?subject=MedPulse%20Demo%20Access%20Request" style="color:#0D9488;font-weight:700;text-decoration:none;">Request Access</a></span>
                     <span style="font-weight:700;color:#0F2C59;">FY2026 Release</span>
                 </div>
             """, unsafe_allow_html=True)
@@ -613,6 +618,51 @@ if not st.session_state["authenticated"]:
         """, unsafe_allow_html=True)
 
     st.stop()
+
+with st.expander("📩 Interested in a Custom Deployment or Live Walkthrough? Contact MedPulse Health Analytics", expanded=False):
+    c_info, c_form = st.columns([1.1, 1.4])
+    with c_info:
+        st.markdown("""
+            <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;padding:16px;">
+                <div style="color:#0F2C59;font-weight:800;font-size:15px;margin-bottom:6px;">Deploy This Platform for Your Health Network</div>
+                <p style="color:#334155;font-size:13px;line-height:1.5;margin-bottom:12px;">
+                    This interactive sandbox runs on synthetic multi-facility data. We tailor and connect this suite directly to your DHIS2/KHIS, EHR, finance, and quality workflows.
+                </p>
+                <a href="mailto:oweyenga75@gmail.com?subject=MedPulse%20Health%20Analytics%20-%20Client%20Inquiry"
+                   style="display:inline-block;background:#0F2C59;color:#FFFFFF;font-weight:700;font-size:13px;padding:8px 14px;border-radius:7px;text-decoration:none;">
+                   ✉️ Direct Email: oweyenga75@gmail.com
+                </a>
+            </div>
+        """, unsafe_allow_html=True)
+    with c_form:
+        with st.form("client_inquiry_form", clear_on_submit=True):
+            f_col1, f_col2 = st.columns(2)
+            client_name = f_col1.text_input("Your Name & Organization", placeholder="e.g., Dr. Jane Doe — Acme Health")
+            client_email = f_col2.text_input("Your Work Email", placeholder="jane@organization.org")
+            client_msg = st.text_area("Project Scope or Questions", placeholder="Tell us about your facilities, indicators, or timeline...", height=75)
+            if st.form_submit_button("Send Inquiry to MedPulse →", use_container_width=True):
+                if not client_name.strip() or not client_email.strip() or not client_msg.strip():
+                    st.warning("Please fill in your name, email, and message before sending.")
+                else:
+                    try:
+                        import requests as _req
+                        resp = _req.post(
+                            "https://formsubmit.co/ajax/oweyenga75@gmail.com",
+                            json={
+                                "_subject": f"MedPulse Demo Inquiry from {client_name.strip()}",
+                                "name": client_name.strip(),
+                                "email": client_email.strip(),
+                                "message": client_msg.strip(),
+                            },
+                            headers={"Accept": "application/json"},
+                            timeout=10,
+                        )
+                        if resp.status_code == 200:
+                            st.success("✅ Inquiry sent! We will respond to your email shortly.")
+                        else:
+                            st.info("Please click the Direct Email button on the left to reach oweyenga75@gmail.com.")
+                    except Exception:
+                        st.info("Please click the Direct Email button on the left to reach oweyenga75@gmail.com.")
 st.set_page_config(
     page_title="MedPulse Executive Clinical & Volume Analytics",
     page_icon="🏥",
