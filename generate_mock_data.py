@@ -171,11 +171,17 @@ curricula = ["Maternal & Newborn Care", "Infection Prevention", "Financial Manag
 mentors = ["Mentor A", "Mentor B", "Mentor C", "Mentor D"]
 
 for ev_idx in range(1, 540):
-    fac = FACILITIES[ev_idx % len(FACILITIES)]
+    fac_idx = ev_idx % 35  # Leave last 3 facilities as Zero Reach Gap
+    fac = FACILITIES[fac_idx]
     ben_id = (ev_idx % 250) + 1
     yr, m_num, m_name = MONTHS[ev_idx % len(MONTHS)]
-    track = tracks[ev_idx % 2]
-    curr = curricula[ev_idx % len(curricula)]
+    if fac_idx >= 31:
+        track, curr = "Medical Quality", "Medical: Maternal & Newborn Care"
+    elif fac_idx >= 28:
+        track, curr = "Management & Finance", "Management: Financial & Inventory"
+    else:
+        track = tracks[ev_idx % 2]
+        curr = ("Medical: " if track == "Medical Quality" else "Management: ") + curricula[ev_idx % len(curricula)]
     mentee_rows.append({
         "event_uid": f"EV_{ev_idx:05d}",
         "tei": f"TEI_{ben_id:04d}",
@@ -208,8 +214,8 @@ for ev_idx in range(1, 540):
         "mentee_name": f"Staff{ben_id} Member{ben_id}",
         "beneficiary_uid": f"BEN-{ben_id:04d}",
         "county": FAC_COUNTY[fac],
-        "Modality": "In-Person" if ev_idx % 3 != 0 else "Virtual",
-        "Delivery_Mode": "On-Site" if ev_idx % 3 != 0 else "Remote",
+        "Modality": "Onsite Mentorship" if ev_idx % 3 != 0 else "Virtual Support",
+        "Delivery_Mode": "Physical / In-Person Onsite" if ev_idx % 3 != 0 else "Virtual Mentorship / Support",
         "Virtual_Platform": "N/A" if ev_idx % 3 != 0 else "Zoom",
         "Minutes": 90,
         "Gender": "Female" if ben_id % 3 != 0 else "Male",
